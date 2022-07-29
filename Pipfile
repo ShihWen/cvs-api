@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 psycopg2 = "*"
+flask = "*"
+flask-restful = "*"
+flask-jwt = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 
