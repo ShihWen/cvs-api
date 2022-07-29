@@ -2,10 +2,10 @@ from db import db
 
 
 class FamilyMartModel(db.Model):    
-    __tablename__ = 'snvnt_str_fm'
+    __tablename__ = 'cnvnt_str_fm'
 
-    extract_date = db.Column(db.DateTime)
-    store_name = db.Column(db.String(80))
+    extract_date = db.Column(db.DateTime, primary_key=True)
+    store_name = db.Column(db.String(80), primary_key=True)
     store_type = db.Column(db.String(80))
     store_city = db.Column(db.String(80))
     store_district = db.Column(db.String(80))
@@ -57,4 +57,4 @@ class FamilyMartModel(db.Model):
 
     @classmethod
     def find_by_name(cls, name):
-        return cls.query.filter_by(name=name).first()
+        return cls.query.filter_by(store_name=name).first()
