@@ -7,5 +7,5 @@ class FamilyMart(Resource):
     def get(self, name):
         item = FamilyMartModel.find_by_name(name)
         if item:
-            return item.json()
+            return item #.json()
         return {'message':'Store not found.'}, 404

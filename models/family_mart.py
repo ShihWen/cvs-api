@@ -1,7 +1,9 @@
-from db import db
+# from db import db
+from config import config
+import psycopg2
 
-
-class FamilyMartModel(db.Model):    
+class FamilyMartModel:    
+    '''
     __tablename__ = 'cnvnt_str_fm'
 
     extract_date = db.Column(db.DateTime, primary_key=True)
@@ -25,7 +27,7 @@ class FamilyMartModel(db.Model):
               , store_lat
               , store_service
               , insert_datetime )
-
+    
 
     def __init__(self, extract_date, store_name
                      , store_type, store_city
@@ -54,7 +56,43 @@ class FamilyMartModel(db.Model):
                 'store_lat':self.store_lat,
                 'store_service':self.store_service,
                 'insert_datetime':self.insert_datetime}
+    '''
 
     @classmethod
     def find_by_name(cls, name):
-        return cls.query.filter_by(store_name=name).first()
+        # return cls.query.filter_by(store_name=name).first()
+        conn = None
+        try:
+            params = config()
+
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+
+            query = f"""
+                SELECT extract_date
+                       , store_name
+                       , address
+                FROM cnvnt_str_fm
+                WHERE store_name = '{name}'
+            """
+            cur.execute(query)
+
+            rows = cur.fetchall()
+            cur.close()
+
+            if rows:
+                result = {'store':[]}
+                for row in rows:
+                    append_dict = {'extract_date':row[0].strftime('%Y-%m-%d'),
+                                   'store_name':row[1],
+                                   'address':row[2]}
+                    result['store'].append(append_dict)
+                return result
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
+                print('Database connection closed.')
+

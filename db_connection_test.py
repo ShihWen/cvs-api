@@ -13,10 +13,21 @@ def connect():
         cur = conn.cursor()
 
         print('PostgresQL database version:')
-        cur.execute('SELECT version()')
+        #cur.execute('SELECT version()')
+        cur.execute('''SELECT extract_date
+                       , store_name
+                       , type
+                       , city
+                       , district
+                       , address
+                       , longitude
+                       , latitude
+                       , services
+                FROM cnvnt_str_fm LIMIT 10''')
 
-        db_version = cur.fetchone()
-        print(db_version)
+        db_content = cur.fetchone()
+        print(db_content)
+        # print([d[0].strftime('%Y-%m-%d') for d in db_content])
 
         cur.close()
     except (Exception, psycopg2.DatabaseError) as error:
