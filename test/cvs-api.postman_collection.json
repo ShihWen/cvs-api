@@ -1,0 +1,46 @@
+{
+	"info": {
+		"_postman_id": "304690fb-d2a4-47ab-81b8-f2ef88f746a2",
+		"name": "cvs-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "2816454"
+	},
+	"item": [
+		{
+			"name": "/fm_byname/<store_name>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:5000/fm_byname/德光"
+			},
+			"response": []
+		},
+		{
+			"name": "/fm_bycity/<city_name>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:5000/fm_bycity/德光"
+			},
+			"response": []
+		},
+		{
+			"name": "/fm_stores",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:5000/fm_stores/"
+			},
+			"response": []
+		},
+		{
+			"name": "/fm_stores/<city_name>",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:5000/fm_stores/"
+			},
+			"response": []
+		}
+	]
+}
