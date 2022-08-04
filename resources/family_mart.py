@@ -36,10 +36,11 @@ class FamilyMartByName(Resource):
             filter(fm_table.c.store_name.like(f'%{name}%'), 
                    fm_table.c.extract_date==latest_cte.c.extract_date)
         
-        output = {'extract_date':latest_var, 'store':[]}
+        if results.first() is None:
+            return {"message":f"Store with name '{name}' does not exists."}
         
+        output = {'extract_date':latest_var, 'store':[]}
         for row in results:
-            
             store_name = row[0]
             address = row[1]
             lng = json.dumps(row[2], use_decimal=True)
@@ -48,8 +49,9 @@ class FamilyMartByName(Resource):
                 'address':address,
                 'longitude':lng,
                 'latitude': lat})
-            
+   
         return output
+        
 
 
 class FamilyMartByCity(Resource):
@@ -68,8 +70,10 @@ class FamilyMartByCity(Resource):
             filter(fm_table.c.address.like(f'{refined_city}%'), 
                    fm_table.c.extract_date==latest_cte.c.extract_date)
         
-        output = {'extract_date':latest_var, 'store':[]}
-        
+        if results.first() is None:
+            return {"message":f"City name '{city}' does not exists."}
+
+        output = {'extract_date':latest_var, 'store':[]}   
         for row in results:
             store_name = row[0]
             address = row[1]
@@ -115,6 +119,9 @@ class FamilyMartStoreNumByGivenCity(Resource):
             group_by(fm_table.c.city, fm_table.c.district).\
             order_by(func.count(fm_table.c.store_name).desc())
         
+        if results.first() is None:
+            return {"message":f"City name '{city}' does not exists."}
+
         output = {'extract_date':latest_var, 'store_counts':{}}
         for city_name, district_name, store_count in results:
             city_district = city_name + district_name
