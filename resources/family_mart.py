@@ -10,7 +10,7 @@ from db import fm_table
 class Tools:
     @classmethod
     def get_latest_dt(cls): 
-        latest_dt = db.session.query(fm_table.c.extract_date).\
+        latest_dt_cte = db.session.query(fm_table.c.extract_date).\
         group_by(fm_table.c.extract_date).\
         order_by(fm_table.c.extract_date.desc()).limit(1).cte('latest_dt')
 
@@ -18,7 +18,7 @@ class Tools:
         group_by(fm_table.c.extract_date).\
         order_by(fm_table.c.extract_date.desc()).limit(1)
 
-        return latest_dt, str(latest_var[0][0])
+        return latest_dt_cte, str(latest_var[0][0])
 
 
 class FamilyMartByName(Resource):
@@ -107,7 +107,9 @@ class FamilyMartStoreNumByGivenCity(Resource):
         latest_cte, latest_var = Tools.get_latest_dt()
         
         refined_city = city.replace('臺', '台')
-        results = db.session.query(fm_table.c.city,fm_table.c.district, func.count(fm_table.c.store_name)).\
+        fields = (fm_table.c.city,fm_table.c.district, func.count(fm_table.c.store_name))
+
+        results = db.session.query(*fields).\
             filter(fm_table.c.address.like(f'{refined_city}%'),
                    fm_table.c.extract_date==latest_cte.c.extract_date).\
             group_by(fm_table.c.city, fm_table.c.district).\
