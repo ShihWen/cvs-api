@@ -10,15 +10,11 @@ from db import fm_table
 class Tools:
     @classmethod
     def get_latest_dt(cls): 
-        latest_dt_cte = db.session.query(fm_table.c.extract_date).\
-        group_by(fm_table.c.extract_date).\
-        order_by(fm_table.c.extract_date.desc()).limit(1).cte('latest_dt')
-
         latest_var = db.session.query(fm_table.c.extract_date).\
         group_by(fm_table.c.extract_date).\
         order_by(fm_table.c.extract_date.desc()).limit(1)
 
-        return latest_dt_cte, str(latest_var[0][0])
+        return str(latest_var[0][0])
 
 
 class FamilyMartByName(Resource):
@@ -29,12 +25,12 @@ class FamilyMartByName(Resource):
                   fm_table.c.longitude, 
                   fm_table.c.latitude)
 
-        latest_cte, latest_var = Tools.get_latest_dt()
+        latest_var = Tools.get_latest_dt()
         
         results = db.session.query(fm_table).\
             with_entities(*fields).\
             filter(fm_table.c.store_name.like(f'%{name}%'), 
-                   fm_table.c.extract_date==latest_cte.c.extract_date)
+                   fm_table.c.extract_date==latest_var)
         
         if results.first() is None:
             return {"message":f"Store with name '{name}' does not exists."}
@@ -62,13 +58,13 @@ class FamilyMartByCity(Resource):
                   fm_table.c.longitude, 
                   fm_table.c.latitude)
 
-        latest_cte, latest_var = Tools.get_latest_dt()
+        latest_var = Tools.get_latest_dt()
         
         refined_city = city.replace('臺', '台')
         results = db.session.query(fm_table).\
             with_entities(*fields).\
             filter(fm_table.c.address.like(f'{refined_city}%'), 
-                   fm_table.c.extract_date==latest_cte.c.extract_date)
+                   fm_table.c.extract_date==latest_var)
         
         if results.first() is None:
             return {"message":f"City name '{city}' does not exists."}
@@ -90,10 +86,10 @@ class FamilyMartByCity(Resource):
 class FamilyMartStoreNumByCity(Resource):
     def get(self):
 
-        latest_cte, latest_var = Tools.get_latest_dt()
+        latest_var = Tools.get_latest_dt()
         
         results = db.session.query(fm_table.c.city, func.count(fm_table.c.store_name)).\
-            filter(fm_table.c.extract_date==latest_cte.c.extract_date).\
+            filter(fm_table.c.extract_date==latest_var).\
             group_by(fm_table.c.city).\
             order_by(func.count(fm_table.c.store_name).desc())
         
@@ -108,14 +104,14 @@ class FamilyMartStoreNumByCity(Resource):
 class FamilyMartStoreNumByGivenCity(Resource):
     def get(self, city):
 
-        latest_cte, latest_var = Tools.get_latest_dt()
+        latest_var = Tools.get_latest_dt()
         
         refined_city = city.replace('臺', '台')
         fields = (fm_table.c.city,fm_table.c.district, func.count(fm_table.c.store_name))
 
         results = db.session.query(*fields).\
             filter(fm_table.c.address.like(f'{refined_city}%'),
-                   fm_table.c.extract_date==latest_cte.c.extract_date).\
+                   fm_table.c.extract_date==latest_var).\
             group_by(fm_table.c.city, fm_table.c.district).\
             order_by(func.count(fm_table.c.store_name).desc())
         
