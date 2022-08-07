@@ -3,6 +3,7 @@ Flask-JWT
 Flask-RESTful
 Flask-SQLAlchemy
 psycopg2-binary
+psycopg2
 simplejson
 SQLAlchemy
 uwsgi
