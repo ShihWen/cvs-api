@@ -1,20 +1,21 @@
 from flask import Flask
 from flask_restful import Api
+import os
 
 
-from config import config
+# from config import config
 from db import db
 from resources.family_mart import FamilyMartByName
 from resources.family_mart import FamilyMartByCity
 from resources.family_mart import FamilyMartStoreNumByCity
 from resources.family_mart import FamilyMartStoreNumByGivenCity
 
-params = config()
-DB_FULL_URL = f"postgresql+psycopg2://{params['user']}:{params['password']}@{params['host']}/{params['database']}"
+#params = config()
+#DB_FULL_URL = f"postgresql+psycopg2://{params['user']}:{params['password']}@{params['host']}/{params['database']}"
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_FULL_URL
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_CUSTOM_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.secret_key = 'apple'
