@@ -35,7 +35,7 @@ class FamilyMartByName(Resource):
         if results.first() is None:
             return {"message":f"Store with name '{name}' does not exists."}
         
-        output = {'extract_date':latest_var, 'store':[]}
+        output = {'extract_date':latest_var, 'input_name':name, 'store':[]}
         for row in results:
             store_name = row[0]
             address = row[1]
@@ -69,7 +69,7 @@ class FamilyMartByCity(Resource):
         if results.first() is None:
             return {"message":f"City name '{city}' does not exists."}
 
-        output = {'extract_date':latest_var, 'store':[]}   
+        output = {'extract_date':latest_var, 'input_city':city, 'store':[]}   
         for row in results:
             store_name = row[0]
             address = row[1]
@@ -118,7 +118,7 @@ class FamilyMartStoreNumByGivenCity(Resource):
         if results.first() is None:
             return {"message":f"City name '{city}' does not exists."}
 
-        output = {'extract_date':latest_var, 'store_counts':{}}
+        output = {'extract_date':latest_var, 'input_city':city ,'store_counts':{}}
         for city_name, district_name, store_count in results:
             city_district = city_name + district_name
             output['store_counts'][city_district] = store_count
