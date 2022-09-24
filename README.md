@@ -79,3 +79,10 @@ __Resources__:
           ...
     }
     ```
+
+## Files
+
+- `app.py`: main app
+- `resources/`: resources for the RESTful API
+- `db.py`: setup `SQLAlchemy` for API
+- `Procfile`, `uwsgi.ini`, `runtime.txt`, `requirement.txt`: files related to Heroku platform
