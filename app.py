@@ -18,7 +18,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_CUSTOM_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
-app.secret_key = 'apple'
+app.secret_key = os.environ.get('APP_SECRET_KEY')
 
 api = Api(app)
 

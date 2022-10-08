@@ -4,7 +4,7 @@ from sqlalchemy import MetaData
 from sqlalchemy import Table, Column, Integer, String, DateTime
 from sqlalchemy import select
 
-from config import config
+from test.config import config
 # check version: 1.4.39
 # print(sqlalchemy.__version__)
 
